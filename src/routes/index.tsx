@@ -1,19 +1,41 @@
 import { createFileRoute } from "@tanstack/react-router"
+import { useQuery } from "convex/react"
+import { api } from "../../convex/_generated/api"
+import { authClient } from "@/lib/auth-client"
 import { Button } from "@/components/ui/button"
 
-export const Route = createFileRoute("/")({ component: App })
+export const Route = createFileRoute("/")({ component: Home })
 
-function App() {
+function Home() {
+  const user = useQuery(api.auth.getCurrentUser)
+
   return (
-    <div className="flex min-h-svh p-6">
-      <div className="flex max-w-md min-w-0 flex-col gap-4 text-sm leading-loose">
-        <div>
-          <h1 className="font-medium">Project ready!</h1>
-          <p>You may now add components and start building.</p>
-          <p>We&apos;ve already added the button component for you.</p>
-          <Button className="mt-2">Button</Button>
-        </div>
-      </div>
-    </div>
+    <main className="container mx-auto flex min-h-[60vh] flex-col items-center justify-center gap-6 p-6 text-center">
+      {user ? (
+        <>
+          <h1 className="text-3xl font-semibold">Hola, {user.name ?? user.email}</h1>
+          <p className="text-muted-foreground">
+            Pronto vas a poder armar una jornada acá.
+          </p>
+        </>
+      ) : (
+        <>
+          <h1 className="text-3xl font-semibold">Fafi</h1>
+          <p className="text-muted-foreground">
+            Entrá para empezar a organizar la jornada.
+          </p>
+          <Button
+            onClick={() =>
+              authClient.signIn.social({
+                provider: "google",
+                callbackURL: "/",
+              })
+            }
+          >
+            Entrar con Google
+          </Button>
+        </>
+      )}
+    </main>
   )
 }
