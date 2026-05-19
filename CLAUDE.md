@@ -23,8 +23,8 @@ Fafi is a web app for friends who get together to play FIFA. It handles a single
 - **TanStack Start** — SSR framework (React 19, Vite, Nitro) with file-based routing via TanStack Router
 - **Convex** — backend-as-a-service: database, server functions, and real-time subscriptions
 - **Better Auth** — authentication library with Convex adapter; Google OAuth only
-- **shadcn/ui** — component library (style: `radix-nova`, base color: `mist`)
-- **Tailwind CSS v4** — styling via `@tailwindcss/vite`
+- **shadcn/ui** — component library (style: `radix-nova`, base color: `mist`) - USE ONLY SEMANTIC VARIABLES
+- **Tailwind CSS v4** — styling via `@tailwindcss/vite` - USE ONLY SHADCN SEMANTIC VARIABLES
 - **Gemini API** — AI-powered team suggestions and fixture generation
 
 ## Commands
