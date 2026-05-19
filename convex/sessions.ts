@@ -31,6 +31,7 @@ export const getActive = query({
 export const create = mutation({
   args: {
     playerIds: v.array(v.id("players")),
+    mode: v.union(v.literal("2v2"), v.literal("1v1")),
   },
   handler: async (ctx, args) => {
     const user = await authComponent.safeGetAuthUser(ctx)
@@ -62,6 +63,7 @@ export const create = mutation({
 
     const sessionId = await ctx.db.insert("sessions", {
       status: "active",
+      mode: args.mode,
       createdBy: creator._id,
       createdAt: Date.now(),
     })

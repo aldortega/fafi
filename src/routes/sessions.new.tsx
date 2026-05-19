@@ -15,6 +15,7 @@ function NewSessionPage() {
   const createSession = useMutation(api.sessions.create)
 
   const [selected, setSelected] = useState<Set<Id<"players">>>(new Set())
+  const [mode, setMode] = useState<"2v2" | "1v1">("2v2")
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -35,7 +36,7 @@ function NewSessionPage() {
     }
     setSubmitting(true)
     try {
-      await createSession({ playerIds: Array.from(selected) })
+      await createSession({ playerIds: Array.from(selected), mode })
       await navigate({ to: "/" })
     } catch (err) {
       setError(err instanceof Error ? err.message : "Error al crear la sesión")
@@ -70,6 +71,27 @@ function NewSessionPage() {
           Elegí quiénes están presentes hoy.
         </p>
       </header>
+
+      <section className="flex flex-col gap-2">
+        <h2 className="text-sm font-medium">Modo de juego</h2>
+        <div className="flex gap-2">
+          {(["2v2", "1v1"] as const).map((m) => (
+            <button
+              key={m}
+              type="button"
+              onClick={() => setMode(m)}
+              className={cn(
+                "flex-1 rounded-md border px-3 py-2 text-sm font-medium transition-colors",
+                mode === m
+                  ? "border-primary bg-primary text-primary-foreground"
+                  : "border-input hover:bg-muted",
+              )}
+            >
+              {m}
+            </button>
+          ))}
+        </div>
+      </section>
 
       <section className="flex flex-col gap-2">
         <h2 className="text-sm font-medium">

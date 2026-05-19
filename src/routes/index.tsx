@@ -1,11 +1,11 @@
 import { Link, createFileRoute } from "@tanstack/react-router"
 import { useEffect, useMemo, useState } from "react"
 import { useMutation, useQuery } from "convex/react"
-import { api } from "../../convex/_generated/api"
 import type { FunctionReturnType } from "convex/server"
+import { Edit3, Plus, Shuffle } from "lucide-react"
+import { api } from "../../convex/_generated/api"
 import type { Doc, Id } from "../../convex/_generated/dataModel"
 import { authClient } from "@/lib/auth-client"
-import { Edit3, Plus } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -31,6 +31,7 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar"
 import { AppSidebar } from "@/components/AppSidebar"
+import { suggestNextMatch } from "@/lib/matchmaking"
 
 export const Route = createFileRoute("/")({ component: Home })
 
@@ -146,8 +147,9 @@ function SignedInHome({ userName }: { userName: string }) {
               <HeaderCard userName={userName} hasSession={!!active} />
               {active ? (
                 <>
-                  <CurrentMatchCard
+                  <NextMatchCard
                     sessionId={active.session._id}
+                    mode={active.session.mode ?? "2v2"}
                     participants={active.participants}
                   />
                   <TodayTableCard
@@ -289,52 +291,87 @@ function Pair({
   )
 }
 
-function CurrentMatchCard({
+function NextMatchCard({
   sessionId,
+  mode,
   participants,
 }: {
   sessionId: Id<"sessions">
+  mode: "2v2" | "1v1"
   participants: Array<Doc<"players">>
 }) {
   const matches = useQuery(api.matches.listBySession, { sessionId })
+  const [seed, setSeed] = useState(() => Math.floor(Math.random() * 1e9))
   const playerById = useMemo(
     () => new Map(participants.map((p) => [p._id, p] as const)),
     [participants]
   )
 
-  if (!matches || matches.length === 0) {
+  const suggestion = useMemo(() => {
+    if (!matches) return null
+    return suggestNextMatch({
+      participants: participants.map((p) => p._id),
+      matches: matches.map((m) => ({ teamA: m.teamA, teamB: m.teamB })),
+      mode,
+      seed,
+    })
+  }, [matches, participants, mode, seed])
+
+  if (!suggestion) {
     return (
       <Card>
         <CardContent className="p-6">
-          <p className="text-sm text-muted-foreground">
-            Todavía no hay partidos en esta jornada.
-          </p>
+          <p className="text-sm text-muted-foreground">Calculando próximo partido...</p>
         </CardContent>
       </Card>
     )
   }
 
-  const match = matches[0]
-  const teamAPlayers = match.teamA.players
-    .map((id) => playerById.get(id))
+  if (suggestion.kind === "insufficient") {
+    return (
+      <Card>
+        <CardHeader>
+          <Badge variant="outline">próximo partido</Badge>
+        </CardHeader>
+        <CardContent className="flex flex-col gap-3">
+          <p className="text-sm text-muted-foreground">{suggestion.message}</p>
+          {mode === "2v2" ? (
+            <p className="text-xs text-muted-foreground">
+              Tip: con jugadores impares podés correr un torneo mixed teams (próximamente).
+            </p>
+          ) : null}
+        </CardContent>
+      </Card>
+    )
+  }
+
+  const teamAPlayers = suggestion.teamA
+    .map((id) => playerById.get(id as Id<"players">))
     .filter(Boolean) as Doc<"players">[]
-  const teamBPlayers = match.teamB.players
-    .map((id) => playerById.get(id))
+  const teamBPlayers = suggestion.teamB
+    .map((id) => playerById.get(id as Id<"players">))
     .filter(Boolean) as Doc<"players">[]
+  const queuePlayers = suggestion.queue
+    .map((id) => playerById.get(id as Id<"players">))
+    .filter(Boolean) as Doc<"players">[]
+
+  const searchParams = {
+    teamA: suggestion.teamA.join(","),
+    teamB: suggestion.teamB.join(","),
+  }
 
   return (
     <Card className="relative overflow-hidden">
       <div className="pointer-events-none absolute -right-20 -top-10 size-72 rounded-full bg-primary/10 blur-2xl" />
       <CardHeader className="relative flex flex-row items-start justify-between">
         <Badge className="bg-primary text-primary-foreground hover:bg-primary">
-          ÚLTIMO PARTIDO
+          PRÓXIMO PARTIDO · {mode.toUpperCase()}
         </Badge>
-        <p className="text-xs text-muted-foreground">
-          {new Date(match.createdAt).toLocaleString("es-AR", {
-            dateStyle: "short",
-            timeStyle: "short",
-          })}
-        </p>
+        {suggestion.relaxedPairRule ? (
+          <Badge variant="outline" className="text-[10px]">
+            pareja repetida (inevitable)
+          </Badge>
+        ) : null}
       </CardHeader>
 
       <CardContent className="relative">
@@ -345,7 +382,7 @@ function CurrentMatchCard({
               <p className="text-lg font-semibold">
                 {teamAPlayers.map((p) => p.name).join(" · ")}
               </p>
-              <p className="text-xs text-muted-foreground">compañeros · mockup</p>
+              <p className="text-xs text-muted-foreground">equipo A</p>
             </div>
           </div>
           <div className="hidden text-2xl font-medium text-muted-foreground sm:block">
@@ -356,7 +393,7 @@ function CurrentMatchCard({
               <p className="text-lg font-semibold">
                 {teamBPlayers.map((p) => p.name).join(" · ")}
               </p>
-              <p className="text-xs text-muted-foreground">mockup</p>
+              <p className="text-xs text-muted-foreground">equipo B</p>
             </div>
             <div className="order-1 sm:order-2">
               <Pair players={teamBPlayers} size="lg" />
@@ -367,27 +404,34 @@ function CurrentMatchCard({
         <Separator className="my-5" />
 
         <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-end">
-          <div className="flex gap-6">
-            <div>
-              <p className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
-                Mejor compañero
-              </p>
-              <p className="mt-0.5 text-sm font-semibold">mockup</p>
-            </div>
-            <div>
-              <p className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
-                Histórico
-              </p>
-              <p className="mt-0.5 text-sm font-semibold">mockup</p>
-            </div>
+          <div>
+            <p className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
+              En espera
+            </p>
+            {queuePlayers.length === 0 ? (
+              <p className="mt-1 text-sm text-muted-foreground">Nadie descansa</p>
+            ) : (
+              <div className="mt-1 flex items-center gap-2">
+                <Pair players={queuePlayers} size="sm" />
+                <p className="text-sm">
+                  {queuePlayers.map((p) => p.name).join(", ")}
+                </p>
+              </div>
+            )}
           </div>
           <div className="flex items-center gap-2">
-            <Button variant="outline" className="rounded-full" disabled>
-              <Edit3 />
-              Editar equipos
+            <Button
+              variant="outline"
+              className="rounded-full"
+              onClick={() => setSeed(Math.floor(Math.random() * 1e9))}
+            >
+              <Shuffle />
+              Volver a sortear
             </Button>
-            <Button className="rounded-full" disabled>
-              Cargar resultado →
+            <Button className="rounded-full" asChild>
+              <Link to="/matches/new" search={searchParams}>
+                Confirmar y empezar →
+              </Link>
             </Button>
           </div>
         </div>

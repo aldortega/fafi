@@ -7,16 +7,35 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { cn } from "@/lib/utils"
 
-export const Route = createFileRoute("/matches/new")({ component: NewMatchPage })
+type NewMatchSearch = {
+  teamA?: string
+  teamB?: string
+}
+
+export const Route = createFileRoute("/matches/new")({
+  component: NewMatchPage,
+  validateSearch: (search: Record<string, unknown>): NewMatchSearch => ({
+    teamA: typeof search.teamA === "string" ? search.teamA : undefined,
+    teamB: typeof search.teamB === "string" ? search.teamB : undefined,
+  }),
+})
 
 type Side = "A" | "B" | null
 
 function NewMatchPage() {
   const navigate = useNavigate()
+  const search = Route.useSearch()
   const active = useQuery(api.sessions.getActive)
   const createMatch = useMutation(api.matches.create)
 
-  const [assign, setAssign] = useState<Map<Id<"players">, Side>>(new Map())
+  const [assign, setAssign] = useState<Map<Id<"players">, Side>>(() => {
+    const init = new Map<Id<"players">, Side>()
+    const parse = (s: string | undefined) =>
+      s ? (s.split(",").filter(Boolean) as Array<Id<"players">>) : []
+    for (const id of parse(search.teamA)) init.set(id, "A")
+    for (const id of parse(search.teamB)) init.set(id, "B")
+    return init
+  })
   const [scoreA, setScoreA] = useState("")
   const [scoreB, setScoreB] = useState("")
   const [submitting, setSubmitting] = useState(false)

@@ -23,6 +23,7 @@ export default defineSchema({
 
   sessions: defineTable({
     status: v.union(v.literal("active"), v.literal("finished")),
+    mode: v.optional(v.union(v.literal("2v2"), v.literal("1v1"))),
     createdBy: v.id("players"),
     createdAt: v.number(),
     finishedAt: v.optional(v.number()),
