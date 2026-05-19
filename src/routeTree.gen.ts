@@ -9,14 +9,28 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as StatsRouteImport } from './routes/stats'
+import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as PlayersRouteImport } from './routes/players'
 import { Route as MockupRouteImport } from './routes/mockup'
 import { Route as HomeV2RouteImport } from './routes/home-v2'
+import { Route as HistoryRouteImport } from './routes/history'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SessionsNewRouteImport } from './routes/sessions.new'
 import { Route as MatchesNewRouteImport } from './routes/matches.new'
+import { Route as HistorySessionIdRouteImport } from './routes/history_.$sessionId'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 
+const StatsRoute = StatsRouteImport.update({
+  id: '/stats',
+  path: '/stats',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProfileRoute = ProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PlayersRoute = PlayersRouteImport.update({
   id: '/players',
   path: '/players',
@@ -30,6 +44,11 @@ const MockupRoute = MockupRouteImport.update({
 const HomeV2Route = HomeV2RouteImport.update({
   id: '/home-v2',
   path: '/home-v2',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HistoryRoute = HistoryRouteImport.update({
+  id: '/history',
+  path: '/history',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -47,6 +66,11 @@ const MatchesNewRoute = MatchesNewRouteImport.update({
   path: '/matches/new',
   getParentRoute: () => rootRouteImport,
 } as any)
+const HistorySessionIdRoute = HistorySessionIdRouteImport.update({
+  id: '/history_/$sessionId',
+  path: '/history/$sessionId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   id: '/api/auth/$',
   path: '/api/auth/$',
@@ -55,18 +79,26 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/history': typeof HistoryRoute
   '/home-v2': typeof HomeV2Route
   '/mockup': typeof MockupRoute
   '/players': typeof PlayersRoute
+  '/profile': typeof ProfileRoute
+  '/stats': typeof StatsRoute
+  '/history/$sessionId': typeof HistorySessionIdRoute
   '/matches/new': typeof MatchesNewRoute
   '/sessions/new': typeof SessionsNewRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/history': typeof HistoryRoute
   '/home-v2': typeof HomeV2Route
   '/mockup': typeof MockupRoute
   '/players': typeof PlayersRoute
+  '/profile': typeof ProfileRoute
+  '/stats': typeof StatsRoute
+  '/history/$sessionId': typeof HistorySessionIdRoute
   '/matches/new': typeof MatchesNewRoute
   '/sessions/new': typeof SessionsNewRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
@@ -74,9 +106,13 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/history': typeof HistoryRoute
   '/home-v2': typeof HomeV2Route
   '/mockup': typeof MockupRoute
   '/players': typeof PlayersRoute
+  '/profile': typeof ProfileRoute
+  '/stats': typeof StatsRoute
+  '/history_/$sessionId': typeof HistorySessionIdRoute
   '/matches/new': typeof MatchesNewRoute
   '/sessions/new': typeof SessionsNewRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
@@ -85,27 +121,39 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/history'
     | '/home-v2'
     | '/mockup'
     | '/players'
+    | '/profile'
+    | '/stats'
+    | '/history/$sessionId'
     | '/matches/new'
     | '/sessions/new'
     | '/api/auth/$'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/history'
     | '/home-v2'
     | '/mockup'
     | '/players'
+    | '/profile'
+    | '/stats'
+    | '/history/$sessionId'
     | '/matches/new'
     | '/sessions/new'
     | '/api/auth/$'
   id:
     | '__root__'
     | '/'
+    | '/history'
     | '/home-v2'
     | '/mockup'
     | '/players'
+    | '/profile'
+    | '/stats'
+    | '/history_/$sessionId'
     | '/matches/new'
     | '/sessions/new'
     | '/api/auth/$'
@@ -113,9 +161,13 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  HistoryRoute: typeof HistoryRoute
   HomeV2Route: typeof HomeV2Route
   MockupRoute: typeof MockupRoute
   PlayersRoute: typeof PlayersRoute
+  ProfileRoute: typeof ProfileRoute
+  StatsRoute: typeof StatsRoute
+  HistorySessionIdRoute: typeof HistorySessionIdRoute
   MatchesNewRoute: typeof MatchesNewRoute
   SessionsNewRoute: typeof SessionsNewRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
@@ -123,6 +175,20 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/stats': {
+      id: '/stats'
+      path: '/stats'
+      fullPath: '/stats'
+      preLoaderRoute: typeof StatsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/profile': {
+      id: '/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof ProfileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/players': {
       id: '/players'
       path: '/players'
@@ -142,6 +208,13 @@ declare module '@tanstack/react-router' {
       path: '/home-v2'
       fullPath: '/home-v2'
       preLoaderRoute: typeof HomeV2RouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/history': {
+      id: '/history'
+      path: '/history'
+      fullPath: '/history'
+      preLoaderRoute: typeof HistoryRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -165,6 +238,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MatchesNewRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/history_/$sessionId': {
+      id: '/history_/$sessionId'
+      path: '/history/$sessionId'
+      fullPath: '/history/$sessionId'
+      preLoaderRoute: typeof HistorySessionIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/auth/$': {
       id: '/api/auth/$'
       path: '/api/auth/$'
@@ -177,9 +257,13 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  HistoryRoute: HistoryRoute,
   HomeV2Route: HomeV2Route,
   MockupRoute: MockupRoute,
   PlayersRoute: PlayersRoute,
+  ProfileRoute: ProfileRoute,
+  StatsRoute: StatsRoute,
+  HistorySessionIdRoute: HistorySessionIdRoute,
   MatchesNewRoute: MatchesNewRoute,
   SessionsNewRoute: SessionsNewRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,

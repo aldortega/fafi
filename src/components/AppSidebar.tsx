@@ -8,9 +8,10 @@ import {
   Plus,
   Settings,
   Trophy,
+  User,
   Users,
 } from "lucide-react"
-import { Link } from "@tanstack/react-router"
+import { Link, useRouterState } from "@tanstack/react-router"
 import { useQuery } from "convex/react"
 import { api } from "../../convex/_generated/api"
 import { cn } from "@/lib/utils"
@@ -46,16 +47,24 @@ function getAvatarColor(id: string) {
   return avatarColorClasses[Math.abs(hash) % avatarColorClasses.length]
 }
 
-const mainNav = [
-  { label: "Inicio", icon: Home, active: true, to: "/" as const },
+type NavItem = {
+  label: string
+  icon: typeof Home
+  to?: "/" | "/stats" | "/players" | "/profile" | "/history"
+  badge?: string
+}
+
+const mainNav: Array<NavItem> = [
+  { label: "Inicio", icon: Home, to: "/" },
   { label: "Jornada", icon: CalendarDays },
   { label: "Torneo", icon: Trophy, badge: "EN CURSO" },
-  { label: "Estadísticas", icon: LineChart },
-  { label: "Historial", icon: Clock },
+  { label: "Estadísticas", icon: LineChart, to: "/stats" },
+  { label: "Historial", icon: Clock, to: "/history" },
 ]
 
-const docsNav = [
-  { label: "Jugadores", icon: Users, to: "/players" as const },
+const docsNav: Array<NavItem> = [
+  { label: "Jugadores", icon: Users, to: "/players" },
+  { label: "Mi perfil", icon: User, to: "/profile" },
   { label: "Reglas", icon: ClipboardList },
   { label: "Ajustes", icon: Settings },
   { label: "Más", icon: MoreHorizontal },
@@ -64,6 +73,7 @@ const docsNav = [
 export function AppSidebar() {
   const user = useQuery(api.auth.getCurrentUser)
   const currentPlayer = useQuery(api.players.getCurrentPlayer)
+  const pathname = useRouterState({ select: (s) => s.location.pathname })
 
   return (
     <Sidebar variant="inset" collapsible="offcanvas">
@@ -97,41 +107,9 @@ export function AppSidebar() {
                 </SidebarMenuButton>
               </SidebarMenuItem>
 
-              {mainNav.map((item) => {
-                const badge =
-                  "badge" in item ? (item as { badge?: string }).badge : undefined
-                return (
-                  <SidebarMenuItem key={item.label}>
-                    <SidebarMenuButton
-                      isActive={item.active}
-                      tooltip={item.label}
-                      asChild={!!item.to}
-                    >
-                      {item.to ? (
-                        <Link to={item.to}>
-                          <item.icon />
-                          <span>{item.label}</span>
-                          {badge ? (
-                            <span className="ml-auto rounded-full bg-primary px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-primary-foreground">
-                              {badge}
-                            </span>
-                          ) : null}
-                        </Link>
-                      ) : (
-                        <>
-                          <item.icon />
-                          <span>{item.label}</span>
-                          {badge ? (
-                            <span className="ml-auto rounded-full bg-primary px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-primary-foreground">
-                              {badge}
-                            </span>
-                          ) : null}
-                        </>
-                      )}
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                )
-              })}
+              {mainNav.map((item) => (
+                <NavRow key={item.label} item={item} pathname={pathname} />
+              ))}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
@@ -141,21 +119,7 @@ export function AppSidebar() {
           <SidebarGroupContent>
             <SidebarMenu className="gap-1">
               {docsNav.map((item) => (
-                <SidebarMenuItem key={item.label}>
-                  <SidebarMenuButton tooltip={item.label} asChild={!!item.to}>
-                    {item.to ? (
-                      <Link to={item.to}>
-                        <item.icon />
-                        <span>{item.label}</span>
-                      </Link>
-                    ) : (
-                      <>
-                        <item.icon />
-                        <span>{item.label}</span>
-                      </>
-                    )}
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
+                <NavRow key={item.label} item={item} pathname={pathname} />
               ))}
             </SidebarMenu>
           </SidebarGroupContent>
@@ -192,5 +156,40 @@ export function AppSidebar() {
         </SidebarMenu>
       </SidebarFooter>
     </Sidebar>
+  )
+}
+
+function NavRow({ item, pathname }: { item: NavItem; pathname: string }) {
+  const isActive = item.to ? pathname === item.to : false
+  return (
+    <SidebarMenuItem>
+      <SidebarMenuButton
+        isActive={isActive}
+        tooltip={item.label}
+        asChild={!!item.to}
+      >
+        {item.to ? (
+          <Link to={item.to}>
+            <item.icon />
+            <span>{item.label}</span>
+            {item.badge ? (
+              <span className="ml-auto rounded-full bg-primary px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-primary-foreground">
+                {item.badge}
+              </span>
+            ) : null}
+          </Link>
+        ) : (
+          <>
+            <item.icon />
+            <span>{item.label}</span>
+            {item.badge ? (
+              <span className="ml-auto rounded-full bg-primary px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-primary-foreground">
+                {item.badge}
+              </span>
+            ) : null}
+          </>
+        )}
+      </SidebarMenuButton>
+    </SidebarMenuItem>
   )
 }
