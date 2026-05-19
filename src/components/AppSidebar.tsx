@@ -15,6 +15,7 @@ import { Link, useRouterState } from "@tanstack/react-router"
 import { useQuery } from "convex/react"
 import { api } from "../../convex/_generated/api"
 import { cn } from "@/lib/utils"
+import { getAvatarColor } from "@/lib/avatar-color"
 import {
   Sidebar,
   SidebarContent,
@@ -28,35 +29,16 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
 
-const avatarColorClasses = [
-  "bg-rose-200 text-rose-900",
-  "bg-sky-200 text-sky-900",
-  "bg-lime-200 text-lime-900",
-  "bg-violet-200 text-violet-900",
-  "bg-amber-200 text-amber-900",
-  "bg-teal-200 text-teal-900",
-  "bg-pink-200 text-pink-900",
-  "bg-blue-200 text-blue-900",
-]
-
-function getAvatarColor(id: string) {
-  let hash = 0
-  for (let i = 0; i < id.length; i++) {
-    hash = id.charCodeAt(i) + ((hash << 5) - hash)
-  }
-  return avatarColorClasses[Math.abs(hash) % avatarColorClasses.length]
-}
-
 type NavItem = {
   label: string
   icon: typeof Home
-  to?: "/" | "/stats" | "/players" | "/profile" | "/history"
+  to?: "/" | "/jornada" | "/stats" | "/players" | "/profile" | "/history"
   badge?: string
 }
 
 const mainNav: Array<NavItem> = [
   { label: "Inicio", icon: Home, to: "/" },
-  { label: "Jornada", icon: CalendarDays },
+  { label: "Jornada", icon: CalendarDays, to: "/jornada" },
   { label: "Torneo", icon: Trophy, badge: "EN CURSO" },
   { label: "Estadísticas", icon: LineChart, to: "/stats" },
   { label: "Historial", icon: Clock, to: "/history" },
@@ -149,7 +131,11 @@ export function AppSidebar() {
                 <span className="text-sm font-medium">
                   {user?.name ?? "Usuario"}
                 </span>
-                <span className="text-xs text-muted-foreground">mockup</span>
+                {user?.email ? (
+                  <span className="text-xs text-muted-foreground">
+                    {user.email}
+                  </span>
+                ) : null}
               </div>
             </SidebarMenuButton>
           </SidebarMenuItem>

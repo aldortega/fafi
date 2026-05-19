@@ -12,8 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as StatsRouteImport } from './routes/stats'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as PlayersRouteImport } from './routes/players'
-import { Route as MockupRouteImport } from './routes/mockup'
-import { Route as HomeV2RouteImport } from './routes/home-v2'
+import { Route as JornadaRouteImport } from './routes/jornada'
 import { Route as HistoryRouteImport } from './routes/history'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SessionsNewRouteImport } from './routes/sessions.new'
@@ -36,14 +35,9 @@ const PlayersRoute = PlayersRouteImport.update({
   path: '/players',
   getParentRoute: () => rootRouteImport,
 } as any)
-const MockupRoute = MockupRouteImport.update({
-  id: '/mockup',
-  path: '/mockup',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const HomeV2Route = HomeV2RouteImport.update({
-  id: '/home-v2',
-  path: '/home-v2',
+const JornadaRoute = JornadaRouteImport.update({
+  id: '/jornada',
+  path: '/jornada',
   getParentRoute: () => rootRouteImport,
 } as any)
 const HistoryRoute = HistoryRouteImport.update({
@@ -80,8 +74,7 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/history': typeof HistoryRoute
-  '/home-v2': typeof HomeV2Route
-  '/mockup': typeof MockupRoute
+  '/jornada': typeof JornadaRoute
   '/players': typeof PlayersRoute
   '/profile': typeof ProfileRoute
   '/stats': typeof StatsRoute
@@ -93,8 +86,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/history': typeof HistoryRoute
-  '/home-v2': typeof HomeV2Route
-  '/mockup': typeof MockupRoute
+  '/jornada': typeof JornadaRoute
   '/players': typeof PlayersRoute
   '/profile': typeof ProfileRoute
   '/stats': typeof StatsRoute
@@ -107,8 +99,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/history': typeof HistoryRoute
-  '/home-v2': typeof HomeV2Route
-  '/mockup': typeof MockupRoute
+  '/jornada': typeof JornadaRoute
   '/players': typeof PlayersRoute
   '/profile': typeof ProfileRoute
   '/stats': typeof StatsRoute
@@ -122,8 +113,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/history'
-    | '/home-v2'
-    | '/mockup'
+    | '/jornada'
     | '/players'
     | '/profile'
     | '/stats'
@@ -135,8 +125,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/history'
-    | '/home-v2'
-    | '/mockup'
+    | '/jornada'
     | '/players'
     | '/profile'
     | '/stats'
@@ -148,8 +137,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/history'
-    | '/home-v2'
-    | '/mockup'
+    | '/jornada'
     | '/players'
     | '/profile'
     | '/stats'
@@ -162,8 +150,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   HistoryRoute: typeof HistoryRoute
-  HomeV2Route: typeof HomeV2Route
-  MockupRoute: typeof MockupRoute
+  JornadaRoute: typeof JornadaRoute
   PlayersRoute: typeof PlayersRoute
   ProfileRoute: typeof ProfileRoute
   StatsRoute: typeof StatsRoute
@@ -196,18 +183,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PlayersRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/mockup': {
-      id: '/mockup'
-      path: '/mockup'
-      fullPath: '/mockup'
-      preLoaderRoute: typeof MockupRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/home-v2': {
-      id: '/home-v2'
-      path: '/home-v2'
-      fullPath: '/home-v2'
-      preLoaderRoute: typeof HomeV2RouteImport
+    '/jornada': {
+      id: '/jornada'
+      path: '/jornada'
+      fullPath: '/jornada'
+      preLoaderRoute: typeof JornadaRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/history': {
@@ -258,8 +238,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   HistoryRoute: HistoryRoute,
-  HomeV2Route: HomeV2Route,
-  MockupRoute: MockupRoute,
+  JornadaRoute: JornadaRoute,
   PlayersRoute: PlayersRoute,
   ProfileRoute: ProfileRoute,
   StatsRoute: StatsRoute,
