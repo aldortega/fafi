@@ -10,6 +10,7 @@
 
 import type * as auth from "../auth.js";
 import type * as http from "../http.js";
+import type * as matches from "../matches.js";
 import type * as players from "../players.js";
 import type * as sessions from "../sessions.js";
 
@@ -22,6 +23,7 @@ import type {
 declare const fullApi: ApiFromModules<{
   auth: typeof auth;
   http: typeof http;
+  matches: typeof matches;
   players: typeof players;
   sessions: typeof sessions;
 }>;
