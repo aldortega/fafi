@@ -3,6 +3,7 @@ import { useQuery } from "convex/react"
 import { api } from "../../convex/_generated/api"
 import { authClient } from "@/lib/auth-client"
 import { Button } from "@/components/ui/button"
+import { ModeToggle } from "@/components/mode-toggle"
 
 export function SiteHeader() {
   const user = useQuery(api.auth.getCurrentUser)
@@ -24,6 +25,7 @@ export function SiteHeader() {
           ) : null}
         </div>
         <div className="flex items-center gap-3">
+          <ModeToggle />
           {user ? (
             <>
               <span className="text-sm text-muted-foreground">

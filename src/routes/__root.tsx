@@ -10,16 +10,29 @@ import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools"
 import { TanStackDevtools } from "@tanstack/react-devtools"
 import { createServerFn } from "@tanstack/react-start"
 import { ConvexBetterAuthProvider } from "@convex-dev/better-auth/react"
+import appCss from "../styles.css?url"
 import type { ConvexQueryClient } from "@convex-dev/react-query"
 import type { QueryClient } from "@tanstack/react-query"
-import appCss from "../styles.css?url"
 import { authClient } from "@/lib/auth-client"
 import { getToken } from "@/lib/auth-server"
-import { SiteHeader } from "@/components/SiteHeader"
+import { TooltipProvider } from "@/components/ui/tooltip"
+import { ThemeProvider } from "@/components/theme-provider"
 
 const getAuth = createServerFn({ method: "GET" }).handler(async () => {
   return await getToken()
 })
+
+const themeScript = `
+  (function() {
+    try {
+      var theme = localStorage.getItem('fafi-theme') || 'system';
+      if (theme === 'system') {
+        theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      }
+      document.documentElement.classList.add(theme);
+    } catch (e) {}
+  })();
+`;
 
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient
@@ -32,6 +45,7 @@ export const Route = createRootRouteWithContext<{
       { title: "Fafi" },
     ],
     links: [{ rel: "stylesheet", href: appCss }],
+    scripts: [{ type: "text/javascript", textContent: themeScript }],
   }),
   beforeLoad: async (ctx) => {
     const token = await getAuth()
@@ -59,8 +73,11 @@ function RootComponent() {
       authClient={authClient}
       initialToken={context.token}
     >
-      <SiteHeader />
-      <Outlet />
+      <ThemeProvider>
+        <TooltipProvider>
+          <Outlet />
+        </TooltipProvider>
+      </ThemeProvider>
     </ConvexBetterAuthProvider>
   )
 }
