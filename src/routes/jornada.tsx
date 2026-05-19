@@ -2,7 +2,6 @@ import { Link, createFileRoute } from "@tanstack/react-router"
 import { useQuery } from "convex/react"
 import { Plus } from "lucide-react"
 import { api } from "../../convex/_generated/api"
-import { useNow } from "@/lib/useNow"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
@@ -23,8 +22,6 @@ export const Route = createFileRoute("/jornada")({ component: JornadaPage })
 function JornadaPage() {
   const user = useQuery(api.auth.getCurrentUser)
   const active = useQuery(api.sessions.getActive)
-  const now = useNow()
-
   return (
     <SidebarProvider>
       <AppSidebar />
@@ -33,7 +30,6 @@ function JornadaPage() {
           <SidebarTrigger className="-ml-1" />
           <Separator orientation="vertical" className="mr-2 h-4 !self-center" />
           <h2 className="text-sm font-medium">Jornada</h2>
-          <div className="ml-auto text-xs text-muted-foreground">{now}</div>
         </header>
         <div className="flex-1 overflow-auto">
           {user === undefined || active === undefined ? (
@@ -46,7 +42,6 @@ function JornadaPage() {
                 <JornadaHeader
                   userName={user?.name ?? user?.email ?? "Jugador"}
                   sessionId={active.session._id}
-                  now={now}
                 />
                 <NextMatchCard
                   sessionId={active.session._id}

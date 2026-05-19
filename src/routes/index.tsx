@@ -3,7 +3,7 @@ import { useEffect } from "react"
 import { useMutation, useQuery } from "convex/react"
 import { api } from "../../convex/_generated/api"
 import { authClient } from "@/lib/auth-client"
-import { useNow } from "@/lib/useNow"
+
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import {
@@ -72,8 +72,6 @@ function LoginView() {
 
 function SignedInHome({ userName }: { userName: string }) {
   const active = useQuery(api.sessions.getActive)
-  const now = useNow()
-
   if (active === undefined) {
     return <LoadingView />
   }
@@ -86,11 +84,11 @@ function SignedInHome({ userName }: { userName: string }) {
           <SidebarTrigger className="-ml-1" />
           <Separator orientation="vertical" className="mr-2 h-4 !self-center" />
           <h2 className="text-sm font-medium">Inicio</h2>
-          <div className="ml-auto text-xs text-muted-foreground">{now}</div>
+
         </header>
         <div className="flex-1 overflow-auto">
           <div className="mx-auto flex max-w-[900px] flex-col gap-5 p-6">
-            <HomeHeader userName={userName} hasSession={!!active} now={now} />
+            <HomeHeader userName={userName} hasSession={!!active} />
             {active ? (
               <ActiveJornadaPreview
                 sessionId={active.session._id}

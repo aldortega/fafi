@@ -5,7 +5,6 @@ import {
   Home,
   LineChart,
   MoreHorizontal,
-  Plus,
   Settings,
   Trophy,
   User,
@@ -77,18 +76,6 @@ export function AppSidebar() {
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu className="gap-1">
-              <SidebarMenuItem>
-                <SidebarMenuButton
-                  asChild
-                  className="bg-foreground text-background hover:bg-foreground/90 hover:text-background"
-                >
-                  <Link to="/matches/new">
-                    <Plus className="size-4" />
-                    Nuevo partido
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-
               {mainNav.map((item) => (
                 <NavRow key={item.label} item={item} pathname={pathname} />
               ))}

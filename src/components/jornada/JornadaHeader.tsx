@@ -4,17 +4,14 @@ import { useMutation } from "convex/react"
 import { Edit3, Plus } from "lucide-react"
 import { api } from "../../../convex/_generated/api"
 import type { Id } from "../../../convex/_generated/dataModel"
-import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 
 export function JornadaHeader({
   userName,
   sessionId,
-  now,
 }: {
   userName: string
   sessionId: Id<"sessions">
-  now: string
 }) {
   const finish = useMutation(api.sessions.finish)
   const [finishing, setFinishing] = useState(false)
@@ -39,12 +36,6 @@ export function JornadaHeader({
         <h1 className="font-heading text-3xl font-semibold tracking-tight">
           Buenas, {userName}.
         </h1>
-        <div className="mt-2 flex items-center gap-2 text-sm text-muted-foreground">
-          <Badge className="bg-primary text-primary-foreground hover:bg-primary">
-            jornada activa
-          </Badge>
-          <span>{now}</span>
-        </div>
       </div>
       <div className="flex shrink-0 items-center gap-2">
         <Button
