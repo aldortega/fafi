@@ -10,13 +10,26 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as PlayersRouteImport } from './routes/players'
+import { Route as MockupRouteImport } from './routes/mockup'
+import { Route as HomeV2RouteImport } from './routes/home-v2'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SessionsNewRouteImport } from './routes/sessions.new'
+import { Route as MatchesNewRouteImport } from './routes/matches.new'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 
 const PlayersRoute = PlayersRouteImport.update({
   id: '/players',
   path: '/players',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MockupRoute = MockupRouteImport.update({
+  id: '/mockup',
+  path: '/mockup',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HomeV2Route = HomeV2RouteImport.update({
+  id: '/home-v2',
+  path: '/home-v2',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -29,6 +42,11 @@ const SessionsNewRoute = SessionsNewRouteImport.update({
   path: '/sessions/new',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MatchesNewRoute = MatchesNewRouteImport.update({
+  id: '/matches/new',
+  path: '/matches/new',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   id: '/api/auth/$',
   path: '/api/auth/$',
@@ -37,34 +55,68 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/home-v2': typeof HomeV2Route
+  '/mockup': typeof MockupRoute
   '/players': typeof PlayersRoute
+  '/matches/new': typeof MatchesNewRoute
   '/sessions/new': typeof SessionsNewRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/home-v2': typeof HomeV2Route
+  '/mockup': typeof MockupRoute
   '/players': typeof PlayersRoute
+  '/matches/new': typeof MatchesNewRoute
   '/sessions/new': typeof SessionsNewRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/home-v2': typeof HomeV2Route
+  '/mockup': typeof MockupRoute
   '/players': typeof PlayersRoute
+  '/matches/new': typeof MatchesNewRoute
   '/sessions/new': typeof SessionsNewRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/players' | '/sessions/new' | '/api/auth/$'
+  fullPaths:
+    | '/'
+    | '/home-v2'
+    | '/mockup'
+    | '/players'
+    | '/matches/new'
+    | '/sessions/new'
+    | '/api/auth/$'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/players' | '/sessions/new' | '/api/auth/$'
-  id: '__root__' | '/' | '/players' | '/sessions/new' | '/api/auth/$'
+  to:
+    | '/'
+    | '/home-v2'
+    | '/mockup'
+    | '/players'
+    | '/matches/new'
+    | '/sessions/new'
+    | '/api/auth/$'
+  id:
+    | '__root__'
+    | '/'
+    | '/home-v2'
+    | '/mockup'
+    | '/players'
+    | '/matches/new'
+    | '/sessions/new'
+    | '/api/auth/$'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  HomeV2Route: typeof HomeV2Route
+  MockupRoute: typeof MockupRoute
   PlayersRoute: typeof PlayersRoute
+  MatchesNewRoute: typeof MatchesNewRoute
   SessionsNewRoute: typeof SessionsNewRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
 }
@@ -76,6 +128,20 @@ declare module '@tanstack/react-router' {
       path: '/players'
       fullPath: '/players'
       preLoaderRoute: typeof PlayersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mockup': {
+      id: '/mockup'
+      path: '/mockup'
+      fullPath: '/mockup'
+      preLoaderRoute: typeof MockupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/home-v2': {
+      id: '/home-v2'
+      path: '/home-v2'
+      fullPath: '/home-v2'
+      preLoaderRoute: typeof HomeV2RouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -92,6 +158,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SessionsNewRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/matches/new': {
+      id: '/matches/new'
+      path: '/matches/new'
+      fullPath: '/matches/new'
+      preLoaderRoute: typeof MatchesNewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/auth/$': {
       id: '/api/auth/$'
       path: '/api/auth/$'
@@ -104,7 +177,10 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  HomeV2Route: HomeV2Route,
+  MockupRoute: MockupRoute,
   PlayersRoute: PlayersRoute,
+  MatchesNewRoute: MatchesNewRoute,
   SessionsNewRoute: SessionsNewRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
 }
