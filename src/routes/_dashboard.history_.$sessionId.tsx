@@ -14,12 +14,7 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
-import {
-  SidebarInset,
-  SidebarProvider,
-  SidebarTrigger,
-} from "@/components/ui/sidebar"
-import { AppSidebar } from "@/components/AppSidebar"
+import { SidebarTrigger } from "@/components/ui/sidebar"
 import { SummaryCards } from "@/components/history-detail/SummaryCards"
 import { WinsBarCard } from "@/components/history-detail/WinsBarCard"
 import { GoalsAreaCard } from "@/components/history-detail/GoalsAreaCard"
@@ -27,7 +22,7 @@ import { RankingCard } from "@/components/history-detail/RankingCard"
 import { MatchRow } from "@/components/history-detail/MatchRow"
 import { PlayerChip } from "@/components/history-detail/PlayerChip"
 
-export const Route = createFileRoute("/history_/$sessionId")({
+export const Route = createFileRoute("/_dashboard/history_/$sessionId")({
   component: HistoryDetailPage,
 })
 
@@ -46,43 +41,40 @@ function HistoryDetailPage() {
   })
 
   return (
-    <SidebarProvider>
-      <AppSidebar />
-      <SidebarInset>
-        <header className="flex h-14 shrink-0 items-center gap-2 border-b px-4">
-          <SidebarTrigger className="-ml-1" />
-          <Separator orientation="vertical" className="mr-2 h-4 !self-center" />
-          <h2 className="text-sm font-medium">Sesión pasada</h2>
-        </header>
+    <>
+      <header className="flex h-14 shrink-0 items-center gap-2 border-b px-4">
+        <SidebarTrigger className="-ml-1" />
+        <Separator orientation="vertical" className="mr-2 h-4 !self-center" />
+        <h2 className="text-sm font-medium">Sesión pasada</h2>
+      </header>
 
-        <div className="flex-1 overflow-auto">
-          <div className="mx-auto flex max-w-[1100px] flex-col gap-6 p-6">
-            <div>
-              <Button variant="ghost" size="sm" asChild className="-ml-2">
-                <Link to="/history">
-                  <ArrowLeft className="size-4" />
-                  Volver al historial
-                </Link>
-              </Button>
-            </div>
-
-            {data === undefined ? (
-              <p className="text-sm text-muted-foreground">Cargando...</p>
-            ) : data === null ? (
-              <Card>
-                <CardContent className="p-6">
-                  <p className="text-sm text-muted-foreground">
-                    Sesión no encontrada.
-                  </p>
-                </CardContent>
-              </Card>
-            ) : (
-              <Detail data={data} />
-            )}
+      <div className="flex-1 overflow-auto">
+        <div className="mx-auto flex max-w-[1100px] flex-col gap-6 p-6">
+          <div>
+            <Button variant="ghost" size="sm" asChild className="-ml-2">
+              <Link to="/history">
+                <ArrowLeft className="size-4" />
+                Volver al historial
+              </Link>
+            </Button>
           </div>
+
+          {data === undefined ? (
+            <p className="text-sm text-muted-foreground">Cargando...</p>
+          ) : data === null ? (
+            <Card>
+              <CardContent className="p-6">
+                <p className="text-sm text-muted-foreground">
+                  Sesión no encontrada.
+                </p>
+              </CardContent>
+            </Card>
+          ) : (
+            <Detail data={data} />
+          )}
         </div>
-      </SidebarInset>
-    </SidebarProvider>
+      </div>
+    </>
   )
 }
 

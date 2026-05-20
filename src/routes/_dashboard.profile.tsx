@@ -15,18 +15,13 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
-import {
-  SidebarInset,
-  SidebarProvider,
-  SidebarTrigger,
-} from "@/components/ui/sidebar"
-import { AppSidebar } from "@/components/AppSidebar"
+import { SidebarTrigger } from "@/components/ui/sidebar"
 
 type ProfileSearch = {
   playerId?: Id<"players">
 }
 
-export const Route = createFileRoute("/profile")({
+export const Route = createFileRoute("/_dashboard/profile")({
   component: ProfilePage,
   validateSearch: (search: Record<string, unknown>): ProfileSearch => ({
     playerId:
@@ -51,28 +46,25 @@ function ProfilePage() {
   const loading = stats === undefined
 
   return (
-    <SidebarProvider>
-      <AppSidebar />
-      <SidebarInset>
-        <header className="flex h-14 shrink-0 items-center gap-2 border-b px-4">
-          <SidebarTrigger className="-ml-1" />
-          <Separator orientation="vertical" className="mr-2 h-4 !self-center" />
-          <h2 className="text-sm font-medium">Perfil</h2>
-        </header>
+    <>
+      <header className="flex h-14 shrink-0 items-center gap-2 border-b px-4">
+        <SidebarTrigger className="-ml-1" />
+        <Separator orientation="vertical" className="mr-2 h-4 !self-center" />
+        <h2 className="text-sm font-medium">Perfil</h2>
+      </header>
 
-        <div className="flex-1 overflow-auto">
-          <div className="mx-auto flex max-w-[900px] flex-col gap-6 p-6">
-            {loading ? (
-              <p className="text-sm text-muted-foreground">Cargando...</p>
-            ) : stats === null ? (
-              <EmptyProfile isOwn={!playerId} />
-            ) : (
-              <ProfileBody stats={stats} />
-            )}
-          </div>
+      <div className="flex-1 overflow-auto">
+        <div className="mx-auto flex max-w-[900px] flex-col gap-6 p-6">
+          {loading ? (
+            <p className="text-sm text-muted-foreground">Cargando...</p>
+          ) : stats === null ? (
+            <EmptyProfile isOwn={!playerId} />
+          ) : (
+            <ProfileBody stats={stats} />
+          )}
         </div>
-      </SidebarInset>
-    </SidebarProvider>
+      </div>
+    </>
   )
 }
 
@@ -106,6 +98,7 @@ type Stats = {
   dif: number
   currentStreak: number
   bestStreak: number
+  tournamentsWon: number
   bestTeammate: {
     player: Doc<"players">
     wins: number
@@ -158,7 +151,7 @@ function ProfileBody({ stats }: { stats: Stats }) {
           label="Diferencia"
           value={stats.dif > 0 ? `+${stats.dif}` : stats.dif}
         />
-        <Stat label="Torneos" value={0} hint="próximamente" />
+        <Stat label="Torneos ganados" value={stats.tournamentsWon} />
       </div>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">

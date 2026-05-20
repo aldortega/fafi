@@ -9,46 +9,28 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as StatsRouteImport } from './routes/stats'
-import { Route as ProfileRouteImport } from './routes/profile'
-import { Route as PlayersRouteImport } from './routes/players'
-import { Route as JornadaRouteImport } from './routes/jornada'
-import { Route as HistoryRouteImport } from './routes/history'
-import { Route as IndexRouteImport } from './routes/index'
+import { Route as DashboardRouteImport } from './routes/_dashboard'
+import { Route as DashboardIndexRouteImport } from './routes/_dashboard.index'
 import { Route as SessionsNewRouteImport } from './routes/sessions.new'
 import { Route as MatchesNewRouteImport } from './routes/matches.new'
-import { Route as HistorySessionIdRouteImport } from './routes/history_.$sessionId'
+import { Route as DashboardStatsRouteImport } from './routes/_dashboard.stats'
+import { Route as DashboardProfileRouteImport } from './routes/_dashboard.profile'
+import { Route as DashboardPlayersRouteImport } from './routes/_dashboard.players'
+import { Route as DashboardJornadaRouteImport } from './routes/_dashboard.jornada'
+import { Route as DashboardHistoryRouteImport } from './routes/_dashboard.history'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
+import { Route as DashboardTournamentsTournamentIdRouteImport } from './routes/_dashboard.tournaments_.$tournamentId'
+import { Route as DashboardTournamentsNewRouteImport } from './routes/_dashboard.tournaments.new'
+import { Route as DashboardHistorySessionIdRouteImport } from './routes/_dashboard.history_.$sessionId'
 
-const StatsRoute = StatsRouteImport.update({
-  id: '/stats',
-  path: '/stats',
+const DashboardRoute = DashboardRouteImport.update({
+  id: '/_dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ProfileRoute = ProfileRouteImport.update({
-  id: '/profile',
-  path: '/profile',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PlayersRoute = PlayersRouteImport.update({
-  id: '/players',
-  path: '/players',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const JornadaRoute = JornadaRouteImport.update({
-  id: '/jornada',
-  path: '/jornada',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const HistoryRoute = HistoryRouteImport.update({
-  id: '/history',
-  path: '/history',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const IndexRoute = IndexRouteImport.update({
+const DashboardIndexRoute = DashboardIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => DashboardRoute,
 } as any)
 const SessionsNewRoute = SessionsNewRouteImport.update({
   id: '/sessions/new',
@@ -60,52 +42,96 @@ const MatchesNewRoute = MatchesNewRouteImport.update({
   path: '/matches/new',
   getParentRoute: () => rootRouteImport,
 } as any)
-const HistorySessionIdRoute = HistorySessionIdRouteImport.update({
-  id: '/history_/$sessionId',
-  path: '/history/$sessionId',
-  getParentRoute: () => rootRouteImport,
+const DashboardStatsRoute = DashboardStatsRouteImport.update({
+  id: '/stats',
+  path: '/stats',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardProfileRoute = DashboardProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardPlayersRoute = DashboardPlayersRouteImport.update({
+  id: '/players',
+  path: '/players',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardJornadaRoute = DashboardJornadaRouteImport.update({
+  id: '/jornada',
+  path: '/jornada',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardHistoryRoute = DashboardHistoryRouteImport.update({
+  id: '/history',
+  path: '/history',
+  getParentRoute: () => DashboardRoute,
 } as any)
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   id: '/api/auth/$',
   path: '/api/auth/$',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DashboardTournamentsTournamentIdRoute =
+  DashboardTournamentsTournamentIdRouteImport.update({
+    id: '/tournaments_/$tournamentId',
+    path: '/tournaments/$tournamentId',
+    getParentRoute: () => DashboardRoute,
+  } as any)
+const DashboardTournamentsNewRoute = DashboardTournamentsNewRouteImport.update({
+  id: '/tournaments/new',
+  path: '/tournaments/new',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardHistorySessionIdRoute =
+  DashboardHistorySessionIdRouteImport.update({
+    id: '/history_/$sessionId',
+    path: '/history/$sessionId',
+    getParentRoute: () => DashboardRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/history': typeof HistoryRoute
-  '/jornada': typeof JornadaRoute
-  '/players': typeof PlayersRoute
-  '/profile': typeof ProfileRoute
-  '/stats': typeof StatsRoute
-  '/history/$sessionId': typeof HistorySessionIdRoute
+  '/': typeof DashboardIndexRoute
+  '/history': typeof DashboardHistoryRoute
+  '/jornada': typeof DashboardJornadaRoute
+  '/players': typeof DashboardPlayersRoute
+  '/profile': typeof DashboardProfileRoute
+  '/stats': typeof DashboardStatsRoute
   '/matches/new': typeof MatchesNewRoute
   '/sessions/new': typeof SessionsNewRoute
+  '/history/$sessionId': typeof DashboardHistorySessionIdRoute
+  '/tournaments/new': typeof DashboardTournamentsNewRoute
+  '/tournaments/$tournamentId': typeof DashboardTournamentsTournamentIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/history': typeof HistoryRoute
-  '/jornada': typeof JornadaRoute
-  '/players': typeof PlayersRoute
-  '/profile': typeof ProfileRoute
-  '/stats': typeof StatsRoute
-  '/history/$sessionId': typeof HistorySessionIdRoute
+  '/history': typeof DashboardHistoryRoute
+  '/jornada': typeof DashboardJornadaRoute
+  '/players': typeof DashboardPlayersRoute
+  '/profile': typeof DashboardProfileRoute
+  '/stats': typeof DashboardStatsRoute
   '/matches/new': typeof MatchesNewRoute
   '/sessions/new': typeof SessionsNewRoute
+  '/': typeof DashboardIndexRoute
+  '/history/$sessionId': typeof DashboardHistorySessionIdRoute
+  '/tournaments/new': typeof DashboardTournamentsNewRoute
+  '/tournaments/$tournamentId': typeof DashboardTournamentsTournamentIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
-  '/history': typeof HistoryRoute
-  '/jornada': typeof JornadaRoute
-  '/players': typeof PlayersRoute
-  '/profile': typeof ProfileRoute
-  '/stats': typeof StatsRoute
-  '/history_/$sessionId': typeof HistorySessionIdRoute
+  '/_dashboard': typeof DashboardRouteWithChildren
+  '/_dashboard/history': typeof DashboardHistoryRoute
+  '/_dashboard/jornada': typeof DashboardJornadaRoute
+  '/_dashboard/players': typeof DashboardPlayersRoute
+  '/_dashboard/profile': typeof DashboardProfileRoute
+  '/_dashboard/stats': typeof DashboardStatsRoute
   '/matches/new': typeof MatchesNewRoute
   '/sessions/new': typeof SessionsNewRoute
+  '/_dashboard/': typeof DashboardIndexRoute
+  '/_dashboard/history_/$sessionId': typeof DashboardHistorySessionIdRoute
+  '/_dashboard/tournaments/new': typeof DashboardTournamentsNewRoute
+  '/_dashboard/tournaments_/$tournamentId': typeof DashboardTournamentsTournamentIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRouteTypes {
@@ -117,44 +143,45 @@ export interface FileRouteTypes {
     | '/players'
     | '/profile'
     | '/stats'
-    | '/history/$sessionId'
     | '/matches/new'
     | '/sessions/new'
+    | '/history/$sessionId'
+    | '/tournaments/new'
+    | '/tournaments/$tournamentId'
     | '/api/auth/$'
   fileRoutesByTo: FileRoutesByTo
   to:
-    | '/'
     | '/history'
     | '/jornada'
     | '/players'
     | '/profile'
     | '/stats'
-    | '/history/$sessionId'
     | '/matches/new'
     | '/sessions/new'
+    | '/'
+    | '/history/$sessionId'
+    | '/tournaments/new'
+    | '/tournaments/$tournamentId'
     | '/api/auth/$'
   id:
     | '__root__'
-    | '/'
-    | '/history'
-    | '/jornada'
-    | '/players'
-    | '/profile'
-    | '/stats'
-    | '/history_/$sessionId'
+    | '/_dashboard'
+    | '/_dashboard/history'
+    | '/_dashboard/jornada'
+    | '/_dashboard/players'
+    | '/_dashboard/profile'
+    | '/_dashboard/stats'
     | '/matches/new'
     | '/sessions/new'
+    | '/_dashboard/'
+    | '/_dashboard/history_/$sessionId'
+    | '/_dashboard/tournaments/new'
+    | '/_dashboard/tournaments_/$tournamentId'
     | '/api/auth/$'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  HistoryRoute: typeof HistoryRoute
-  JornadaRoute: typeof JornadaRoute
-  PlayersRoute: typeof PlayersRoute
-  ProfileRoute: typeof ProfileRoute
-  StatsRoute: typeof StatsRoute
-  HistorySessionIdRoute: typeof HistorySessionIdRoute
+  DashboardRoute: typeof DashboardRouteWithChildren
   MatchesNewRoute: typeof MatchesNewRoute
   SessionsNewRoute: typeof SessionsNewRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
@@ -162,47 +189,19 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/stats': {
-      id: '/stats'
-      path: '/stats'
-      fullPath: '/stats'
-      preLoaderRoute: typeof StatsRouteImport
+    '/_dashboard': {
+      id: '/_dashboard'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof DashboardRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/profile': {
-      id: '/profile'
-      path: '/profile'
-      fullPath: '/profile'
-      preLoaderRoute: typeof ProfileRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/players': {
-      id: '/players'
-      path: '/players'
-      fullPath: '/players'
-      preLoaderRoute: typeof PlayersRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/jornada': {
-      id: '/jornada'
-      path: '/jornada'
-      fullPath: '/jornada'
-      preLoaderRoute: typeof JornadaRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/history': {
-      id: '/history'
-      path: '/history'
-      fullPath: '/history'
-      preLoaderRoute: typeof HistoryRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/': {
-      id: '/'
+    '/_dashboard/': {
+      id: '/_dashboard/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof DashboardIndexRouteImport
+      parentRoute: typeof DashboardRoute
     }
     '/sessions/new': {
       id: '/sessions/new'
@@ -218,12 +217,40 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MatchesNewRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/history_/$sessionId': {
-      id: '/history_/$sessionId'
-      path: '/history/$sessionId'
-      fullPath: '/history/$sessionId'
-      preLoaderRoute: typeof HistorySessionIdRouteImport
-      parentRoute: typeof rootRouteImport
+    '/_dashboard/stats': {
+      id: '/_dashboard/stats'
+      path: '/stats'
+      fullPath: '/stats'
+      preLoaderRoute: typeof DashboardStatsRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/_dashboard/profile': {
+      id: '/_dashboard/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof DashboardProfileRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/_dashboard/players': {
+      id: '/_dashboard/players'
+      path: '/players'
+      fullPath: '/players'
+      preLoaderRoute: typeof DashboardPlayersRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/_dashboard/jornada': {
+      id: '/_dashboard/jornada'
+      path: '/jornada'
+      fullPath: '/jornada'
+      preLoaderRoute: typeof DashboardJornadaRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/_dashboard/history': {
+      id: '/_dashboard/history'
+      path: '/history'
+      fullPath: '/history'
+      preLoaderRoute: typeof DashboardHistoryRouteImport
+      parentRoute: typeof DashboardRoute
     }
     '/api/auth/$': {
       id: '/api/auth/$'
@@ -232,17 +259,60 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAuthSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_dashboard/tournaments_/$tournamentId': {
+      id: '/_dashboard/tournaments_/$tournamentId'
+      path: '/tournaments/$tournamentId'
+      fullPath: '/tournaments/$tournamentId'
+      preLoaderRoute: typeof DashboardTournamentsTournamentIdRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/_dashboard/tournaments/new': {
+      id: '/_dashboard/tournaments/new'
+      path: '/tournaments/new'
+      fullPath: '/tournaments/new'
+      preLoaderRoute: typeof DashboardTournamentsNewRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/_dashboard/history_/$sessionId': {
+      id: '/_dashboard/history_/$sessionId'
+      path: '/history/$sessionId'
+      fullPath: '/history/$sessionId'
+      preLoaderRoute: typeof DashboardHistorySessionIdRouteImport
+      parentRoute: typeof DashboardRoute
+    }
   }
 }
 
+interface DashboardRouteChildren {
+  DashboardHistoryRoute: typeof DashboardHistoryRoute
+  DashboardJornadaRoute: typeof DashboardJornadaRoute
+  DashboardPlayersRoute: typeof DashboardPlayersRoute
+  DashboardProfileRoute: typeof DashboardProfileRoute
+  DashboardStatsRoute: typeof DashboardStatsRoute
+  DashboardIndexRoute: typeof DashboardIndexRoute
+  DashboardHistorySessionIdRoute: typeof DashboardHistorySessionIdRoute
+  DashboardTournamentsNewRoute: typeof DashboardTournamentsNewRoute
+  DashboardTournamentsTournamentIdRoute: typeof DashboardTournamentsTournamentIdRoute
+}
+
+const DashboardRouteChildren: DashboardRouteChildren = {
+  DashboardHistoryRoute: DashboardHistoryRoute,
+  DashboardJornadaRoute: DashboardJornadaRoute,
+  DashboardPlayersRoute: DashboardPlayersRoute,
+  DashboardProfileRoute: DashboardProfileRoute,
+  DashboardStatsRoute: DashboardStatsRoute,
+  DashboardIndexRoute: DashboardIndexRoute,
+  DashboardHistorySessionIdRoute: DashboardHistorySessionIdRoute,
+  DashboardTournamentsNewRoute: DashboardTournamentsNewRoute,
+  DashboardTournamentsTournamentIdRoute: DashboardTournamentsTournamentIdRoute,
+}
+
+const DashboardRouteWithChildren = DashboardRoute._addFileChildren(
+  DashboardRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
-  HistoryRoute: HistoryRoute,
-  JornadaRoute: JornadaRoute,
-  PlayersRoute: PlayersRoute,
-  ProfileRoute: ProfileRoute,
-  StatsRoute: StatsRoute,
-  HistorySessionIdRoute: HistorySessionIdRoute,
+  DashboardRoute: DashboardRouteWithChildren,
   MatchesNewRoute: MatchesNewRoute,
   SessionsNewRoute: SessionsNewRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
