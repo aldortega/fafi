@@ -15,6 +15,7 @@ type PlayerStats = {
   dif: number
   currentStreak: number
   bestStreak: number
+  tournamentsWon: number
   bestTeammate: {
     player: Doc<"players">
     wins: number
@@ -96,6 +97,20 @@ async function buildStats(
 ): Promise<Array<PlayerStats>> {
   const matches = await ctx.db.query("matches").collect()
   matches.sort((a, b) => a.createdAt - b.createdAt)
+
+  const finishedTournaments = await ctx.db.query("tournaments").collect()
+  const tournamentsWonByPlayer = new Map<string, number>()
+  for (const t of finishedTournaments) {
+    if (t.status !== "finished" || !t.championTeamId) continue
+    const champTeam = await ctx.db.get(t.championTeamId)
+    if (!champTeam) continue
+    for (const pid of champTeam.players) {
+      tournamentsWonByPlayer.set(
+        pid,
+        (tournamentsWonByPlayer.get(pid) ?? 0) + 1,
+      )
+    }
+  }
 
   const accums = new Map<string, PlayerAccum>()
 
@@ -232,6 +247,7 @@ async function buildStats(
       dif: a.gf - a.gc,
       currentStreak: current,
       bestStreak: best,
+      tournamentsWon: tournamentsWonByPlayer.get(idStr) ?? 0,
       bestTeammate,
       toughestRival,
     })

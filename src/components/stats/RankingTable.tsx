@@ -38,6 +38,7 @@ export function RankingTable({ rows }: { rows: Array<RankRow> }) {
               <TableHead className="text-right">PG</TableHead>
               <TableHead className="text-right">PP</TableHead>
               <TableHead className="text-right">Win %</TableHead>
+              <TableHead className="text-right">Torneos</TableHead>
               <TableHead className="text-right">GF</TableHead>
               <TableHead className="text-right">GC</TableHead>
               <TableHead className="text-right">DIF</TableHead>
@@ -66,6 +67,15 @@ export function RankingTable({ rows }: { rows: Array<RankRow> }) {
                 <TableCell className="text-right tabular-nums">{r.pp}</TableCell>
                 <TableCell className="text-right tabular-nums">
                   {r.pj === 0 ? "—" : `${Math.round(r.winPct * 100)}%`}
+                </TableCell>
+                <TableCell className="text-right tabular-nums">
+                  {r.tournamentsWon > 0 ? (
+                    <span className="inline-flex items-center gap-0.5 font-medium text-amber-600">
+                      🏆 {r.tournamentsWon}
+                    </span>
+                  ) : (
+                    <span className="text-muted-foreground">—</span>
+                  )}
                 </TableCell>
                 <TableCell className="text-right tabular-nums">{r.gf}</TableCell>
                 <TableCell className="text-right tabular-nums">{r.gc}</TableCell>

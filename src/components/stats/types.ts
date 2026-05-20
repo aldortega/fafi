@@ -11,6 +11,7 @@ export type RankRow = {
   dif: number
   currentStreak: number
   bestStreak: number
+  tournamentsWon: number
   bestTeammate: {
     player: Doc<"players">
     wins: number
