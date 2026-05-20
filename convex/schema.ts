@@ -60,6 +60,7 @@ export default defineSchema({
 
   tournaments: defineTable({
     sessionId: v.id("sessions"),
+    name: v.optional(v.string()),
     format: v.union(v.literal("liga"), v.literal("bracket")),
     teamMode: v.union(v.literal("fixed"), v.literal("mixed")),
     status: v.union(
@@ -70,5 +71,25 @@ export default defineSchema({
     createdBy: v.id("players"),
     createdAt: v.number(),
     finishedAt: v.optional(v.number()),
-  }).index("by_session", ["sessionId"]),
+    championTeamId: v.optional(v.id("tournamentTeams")),
+  })
+    .index("by_session", ["sessionId"])
+    .index("by_session_and_status", ["sessionId", "status"]),
+
+  tournamentTeams: defineTable({
+    tournamentId: v.id("tournaments"),
+    name: v.string(),
+    players: v.array(v.id("players")),
+  }).index("by_tournament", ["tournamentId"]),
+
+  tournamentFixtures: defineTable({
+    tournamentId: v.id("tournaments"),
+    round: v.number(),
+    position: v.number(),
+    teamAId: v.id("tournamentTeams"),
+    teamBId: v.id("tournamentTeams"),
+    matchId: v.optional(v.id("matches")),
+  })
+    .index("by_tournament", ["tournamentId"])
+    .index("by_match", ["matchId"]),
 })
