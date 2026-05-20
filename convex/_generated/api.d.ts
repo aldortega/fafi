@@ -14,6 +14,7 @@ import type * as matches from "../matches.js";
 import type * as players from "../players.js";
 import type * as sessions from "../sessions.js";
 import type * as stats from "../stats.js";
+import type * as tournaments from "../tournaments.js";
 
 import type {
   ApiFromModules,
@@ -28,6 +29,7 @@ declare const fullApi: ApiFromModules<{
   players: typeof players;
   sessions: typeof sessions;
   stats: typeof stats;
+  tournaments: typeof tournaments;
 }>;
 
 /**
