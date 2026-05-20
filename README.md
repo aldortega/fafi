@@ -1,18 +1,3 @@
-# Fafi
-
-<p align="center">
-  <strong>Organizá tu jornada de FIFA entre amigos sin dramas.</strong>
-</p>
-
-<p align="center">
-  <a href="#qu%C3%A9-es-fafi">Qué es</a> •
-  <a href="#caracter%C3%ADsticas">Características</a> •
-  <a href="#stack-t%C3%A9cnico">Stack</a> •
-  <a href="#estado-del-proyecto">Estado</a>
-</p>
-
----
-
 ## Qué es Fafi
 
 Fafi es una app web para grupos de amigos que se juntan a jugar FIFA. Te permite organizar la jornada del día: crear una sesión, armar equipos, cargar resultados, correr torneos y llevar estadísticas de quién le gana a quién.
